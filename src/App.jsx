@@ -1,8 +1,6 @@
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Game from './components/Game';
-import Login from './pages/Login';
-import Register from './pages/Register';
 import Words from './pages/Words';
 import Header from './components/Header';
 import Learn from './pages/Learn';
@@ -18,8 +16,6 @@ function App() {
     <Route path='/words' element={ <Words /> } />
     <Route path='/learn' element={ <Learn /> } />
     <Route path='/learn/:game' element={ <Game /> } />
-    <Route path='/login' element={ <Login /> } />
-    <Route path='/register' element={ <Register /> } />
     </Routes>
     <Footer />
     </BrowserRouter>

@@ -1,125 +1,87 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import CardHome from '../components/CardHome'
 
 const HomeStyle = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center;
+  max-width: 500px;
+  margin: 0 auto;
+  h1 {
+    margin-bottom: 20px;
+  }
   section {
+    margin-top: 40px;
+    display: flex;
+    img {
+      width: 150px;
+      margin: 0 20px;
+      /* filter: invert(100%) sepia(100%) saturate(100%) hue-rotate(0deg)
+      brightness(100%) contrast(100%); */
+    }
     &:nth-child(2n + 1) {
       text-align: end;
       flex-direction: row-reverse;
     }
-  }
-`;
-
-const WelcomeMessage = styled.h1`
-  margin-bottom: 20px;
-`;
-
-const SectionContainer = styled.section`
-  margin-top: 40px;
-  display: flex;
-  align-items: center;
-  img {
-    width: 150px;
-    margin: 0 20px;
-    /* filter: invert(100%) sepia(100%) saturate(100%) hue-rotate(0deg)
-      brightness(100%) contrast(100%); */
-  }
-`;
-
-const SectionTitle = styled.h2`
-  margin-bottom: 10px;
-`;
-
-const SectionDescription = styled.p`
-  margin-bottom: 20px;
-`;
-
-const LinkContainer = styled.div`
-  margin-top: 10px;
-  a {
-    background-color: #F66;
-    color: #FFF;
-    padding: 7px;
-    border-radius: 5px;
-    text-decoration: none;
+    .info {
+      h2 {
+        margin-bottom: 10px;
+      }
+      p {
+        margin-bottom: 20px;
+      }
+      .link {
+        a {
+          background-color: #f66;
+          color: #fff;
+          padding: 7px;
+          border-radius: 5px;
+          text-decoration: none;
+        }
+      }
+    }
   }
 `;
 
 const Home = () => {
   return (
     <HomeStyle>
-      <WelcomeMessage>Bienvenidos / ברוך הבא</WelcomeMessage>
+      <h1>Bienvenidos / ברוך הבא</h1>
 
-      <SectionContainer>
-        <img src="./aleph.svg" />
-        <div className="info">
-          <SectionTitle>Palabras</SectionTitle>
-          <SectionDescription>
-            Descubre nuevas palabras y amplía tu vocabulario.
-          </SectionDescription>
-          <LinkContainer>
-            <Link to="/words">Explorar</Link>
-          </LinkContainer>
-        </div>
-      </SectionContainer>
+      <CardHome
+        imgSrc={"./aleph.svg"}
+        title={'Palabras'}
+        text={"Descubre nuevas palabras y amplía tu vocabulario."}
+        to={["/words", "Explorar"]}
+      />
 
-      <SectionContainer>
-        <img src="./dictionary.svg" />
-        <div className="info">
-          <SectionTitle>Aprender</SectionTitle>
-          <SectionDescription>
-            Participa en juegos interactivos para mejorar tus habilidades.
-          </SectionDescription>
-          <LinkContainer>
-            <Link to="/learn">Explorar</Link>
-          </LinkContainer>
-        </div>
-      </SectionContainer>
+      <CardHome
+        imgSrc={"./dictionary.svg"}
+        title={'Aprender'}
+        text={"Participa en juegos interactivos para mejorar tus habilidades."}
+        to={["/learn", "Explorar"]}
+      />
 
-      <SectionContainer>
-        <img src="./jala.png" />
-        <div className="info">
-        <SectionTitle>Recursos</SectionTitle>
-        <SectionDescription>
-          Encuentra recursos útiles para aprender y practicar.
-        </SectionDescription>
-        <LinkContainer>
-          <Link to="/resources">Explorar</Link>
-        </LinkContainer>
-        </div>
-      </SectionContainer>
+      <CardHome
+        imgSrc={"./jala.png"}
+        title={'Recursos'}
+        text={"Encuentra recursos útiles para aprender y practicar."}
+        to={["/resources", "Explorar"]}
+      />
 
-      <SectionContainer>
-        <img src="./community.svg" />
+      <CardHome
+        imgSrc={"./community.svg"}
+        title={'Comunidad'}
+        text={"Únete a nuestra comunidad para compartir experiencias y conocimientos."}
+        to={["/community", "Explorar"]}
+      />
 
-        <div className="info">
-          <SectionTitle>Comunidad</SectionTitle>
-          <SectionDescription>
-            Únete a nuestra comunidad para compartir experiencias y
-            conocimientos.
-          </SectionDescription>
-          <LinkContainer>
-            <Link to="/community">Explorar</Link>
-          </LinkContainer>
-        </div>
-      </SectionContainer>
-
-      <SectionContainer>
-        <img src="./credentials.svg" />
-        <div className="info">
-          <SectionTitle>Iniciar sesión</SectionTitle>
-          <SectionDescription>
-            Accede a tu cuenta para guardar tus progresos y obtener más
-            beneficios.
-          </SectionDescription>
-          <LinkContainer>
-            <Link to="/login">Iniciar sesión</Link>
-          </LinkContainer>
-        </div>
-      </SectionContainer>
+      <CardHome
+        imgSrc={"./credentials.svg"}
+        title={'Iniciar sesión'}
+        text={"Accede a tu cuenta para guardar tus progresos y obtener más beneficios."}
+        to={["/login", "Iniciar sesión"]}
+      />
     </HomeStyle>
   );
 };

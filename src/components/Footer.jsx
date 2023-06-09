@@ -14,6 +14,11 @@ const FooterContainer = styled.footer`
     width: 100px;
     align-self: flex-start
   }
+  @media (max-width: 425px) {
+    img {
+      display: none;
+    }
+  }
 `;
 
 const FooterText = styled.p`

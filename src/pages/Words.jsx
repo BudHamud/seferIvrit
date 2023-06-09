@@ -10,6 +10,7 @@ h3 {
     justify-content: center;
     align-items: center;
     gap: 5px;
+    flex-wrap: wrap;
     p {
       padding: 8px;
       background-color: #f99;
