@@ -19,7 +19,7 @@ const LearnStyle = styled.main`
 `;
 
 const Learn = () => {
-  const isLoggedIn = useContext(AuthContext);
+  const { isLoggedIn } = useContext(AuthContext);
   const [nivelActual, setNivelActual] = useState(1);
   const [nivelesCompletados, setNivelesCompletados] = useState([]);
 

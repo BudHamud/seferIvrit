@@ -11,6 +11,7 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_APP_URL}/api/auth/checkLoggedIn`, {
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       }
@@ -18,7 +19,7 @@ const AuthProvider = ({ children }) => {
       .then((response) => response.json())
       .then((data) => setIsLoggedIn(data.isLoggedIn))
       .catch((error) => console.log(error));
-  }, []); // Pasando un arreglo vacío como segundo argumento
+  }, []);
 
   return (
     <AuthContext.Provider value={{ isLoggedIn, updateLoggedInStatus }}>

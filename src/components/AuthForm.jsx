@@ -1,7 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 
 const AuthForm = ({ endpoint, title, submitText, includeUsername, includeEmail, includePassword }) => {
+  const { updateLoggedInStatus } = useContext(AuthContext);
+  
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -22,6 +25,7 @@ const AuthForm = ({ endpoint, title, submitText, includeUsername, includeEmail, 
 
       const response = await fetch(endpoint, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json'
         },
@@ -31,21 +35,7 @@ const AuthForm = ({ endpoint, title, submitText, includeUsername, includeEmail, 
       if (response.ok) {
         const data = await response.json();
         console.log('Authenticated user:', data);
-        fetch(`${import.meta.env.VITE_APP_URL}/api/auth/checkLoggedIn`, {
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          }
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.isLoggedIn) {
-              navigate('/');
-            } else {
-              console.log('El usuario no está logueado');
-            }
-          })
-          .catch((error) => console.log(error));
+        updateLoggedInStatus(true); // Actualizar el estado de inicio de sesión
       } else {
         const errorData = await response.json();
         console.log('Authentication error:', errorData.message);

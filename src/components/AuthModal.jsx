@@ -94,6 +94,7 @@ const AuthModal = () => {
 
   const handleLogout = () => {
     fetch(`${import.meta.env.VITE_APP_URL}/api/auth/logout`, {
+      credentials: 'include',
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -102,10 +103,10 @@ const AuthModal = () => {
       .then((response) => response.json())
       .then((data) => {
         if (data.success) {
-          updateLoggedInStatus(false);
+          updateLoggedInStatus(false); // Actualizar el estado de inicio de sesión
           closeModal();
         } else {
-          console.log(data.error);
+          console.log(data);
         }
       })
       .catch((error) => console.log(error));
