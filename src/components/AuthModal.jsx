@@ -152,7 +152,7 @@ const AuthModal = () => {
                 {isRegistering ? (
                   <>
                     <AuthForm
-                      endpoint={`${import.meta.env.VITE_APP_LOCAL}/api/auth/register`}
+                      endpoint={`${import.meta.env.VITE_APP_URL}/api/auth/register`}
                       title="Registro"
                       submitText="Registrarse"
                       includeUsername
@@ -167,7 +167,7 @@ const AuthModal = () => {
                 ) : (
                   <>
                     <AuthForm
-                      endpoint={`${import.meta.env.VITE_APP_LOCAL}/api/auth/login`}
+                      endpoint={`${import.meta.env.VITE_APP_URL}/api/auth/login`}
                       title="Iniciar sesión"
                       submitText="Iniciar sesión"
                       includeEmail
