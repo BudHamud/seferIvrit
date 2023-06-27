@@ -1,6 +1,50 @@
 import styled from "styled-components";
 import CardHome from '../components/CardHome'
 
+const Home = () => {
+  return (
+    <HomeStyle>
+      <h1>Bienvenidos / ברוך הבא</h1>
+
+      <CardHome
+        imgSrc={"./aleph.svg"}
+        title={'Palabras'}
+        text={"Descubre nuevas palabras y amplía tu vocabulario."}
+        to={["/words", "Ver"]}
+      />
+
+      <CardHome
+        imgSrc={"./dictionary.svg"}
+        title={'Aprender'}
+        text={"Participa en juegos interactivos para mejorar tus habilidades."}
+        to={["/learn", "Explorar"]}
+      />
+
+      <CardHome
+        imgSrc={"./jala.png"}
+        title={'Recursos'}
+        text={"Encuentra recursos útiles para aprender y practicar."}
+      />
+
+      <CardHome
+        imgSrc={"./community.svg"}
+        title={'Comunidad'}
+        text={"Únete a nuestra comunidad para compartir experiencias y conocimientos."}
+
+      />
+
+      <CardHome
+        imgSrc={"./credentials.svg"}
+        title={'Iniciar sesión'}
+        text={"Accede a tu cuenta para guardar tus progresos y obtener más beneficios."}
+      />
+    </HomeStyle>
+  );
+};
+
+export default Home;
+
+
 const HomeStyle = styled.main`
   display: flex;
   flex-direction: column;
@@ -24,6 +68,7 @@ const HomeStyle = styled.main`
       flex-direction: row-reverse;
     }
     .info {
+      align-self: center;
       h2 {
         margin-bottom: 10px;
       }
@@ -42,48 +87,3 @@ const HomeStyle = styled.main`
     }
   }
 `;
-
-const Home = () => {
-  return (
-    <HomeStyle>
-      <h1>Bienvenidos / ברוך הבא</h1>
-
-      <CardHome
-        imgSrc={"./aleph.svg"}
-        title={'Palabras'}
-        text={"Descubre nuevas palabras y amplía tu vocabulario."}
-        to={["/words", "Explorar"]}
-      />
-
-      <CardHome
-        imgSrc={"./dictionary.svg"}
-        title={'Aprender'}
-        text={"Participa en juegos interactivos para mejorar tus habilidades."}
-        to={["/learn", "Explorar"]}
-      />
-
-      <CardHome
-        imgSrc={"./jala.png"}
-        title={'Recursos'}
-        text={"Encuentra recursos útiles para aprender y practicar."}
-        to={["/resources", "Explorar"]}
-      />
-
-      <CardHome
-        imgSrc={"./community.svg"}
-        title={'Comunidad'}
-        text={"Únete a nuestra comunidad para compartir experiencias y conocimientos."}
-        to={["/community", "Explorar"]}
-      />
-
-      <CardHome
-        imgSrc={"./credentials.svg"}
-        title={'Iniciar sesión'}
-        text={"Accede a tu cuenta para guardar tus progresos y obtener más beneficios."}
-        to={["/login", "Iniciar sesión"]}
-      />
-    </HomeStyle>
-  );
-};
-
-export default Home;

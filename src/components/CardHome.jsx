@@ -10,9 +10,12 @@ const CardHome = ({ imgSrc, title, text, to }) => {
           <p>
             { text }
           </p>
-          <div className="link">
+          {
+            to ?
+            <div className="link">
             <Link to={ to[0] }>{ to[1] }</Link>
-          </div>
+          </div> : ''
+          }
         </div>
       </section>
     );

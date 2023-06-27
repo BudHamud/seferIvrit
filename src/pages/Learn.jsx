@@ -1,8 +1,7 @@
-import { useState ,useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
+import learnAPI from "../api/learnAPI";
 import styled from "styled-components";
-// import axios from "axios";
-// import { useNavigate } from "react-router-dom";
 
 const LearnStyle = styled.main`
   display: flex;
@@ -19,59 +18,49 @@ const LearnStyle = styled.main`
 `;
 
 const Learn = () => {
-  const { isLoggedIn } = useContext(AuthContext);
-  const [nivelActual, setNivelActual] = useState(1);
-  const [nivelesCompletados, setNivelesCompletados] = useState([]);
+  const { user } = useContext(AuthContext);
+  const [levels, setLevels] = useState([]);
+  const [ansArr, setAns] = useState([]) 
 
-  const seleccionarNivel = (nivel) => {
-    if (nivelesCompletados.includes(nivel)) {
-      setNivelActual(nivel);
-    } else {
-      alert(
-        "No puedes acceder a este nivel todavía. Completa los niveles anteriores primero."
-      );
-    }
-  };
+  useEffect(() => {
+    const fetchLevels = async () => {
+      try {
+        const level = user.progress.level;
+        const unit = user.progress.unit;
+        const levelArr = await learnAPI.getLevels(level, unit);
+        setLevels(levelArr[0]);
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
-  const completarNivel = (nivel) => {
-    if (!nivelesCompletados.includes(nivel)) {
-      setNivelesCompletados([...nivelesCompletados, nivel]);
+    if (user.length !== 0) {
+      fetchLevels();
     }
-  };
+  }, [user]);
+
+  const saveAnswer = (i) => {
+    let arr = ansArr
+    arr.push(levels.exercises[0].answers[i].isCorrect)
+    setAns(arr)
+  }
 
   return (
     <LearnStyle>
-      {isLoggedIn ? (
-        <>
-          <h1>Unidad 1:</h1>
-          <div>
-            {Array.from({ length: 7 }, (_, index) => index + 1).map((nivel) => (
-              <div key={nivel}>
-                Nivel {nivel}
-                {nivel === nivelActual ? (
-                  <button onClick={() => seleccionarNivel(nivel)}>
-                    Continuar
-                  </button>
-                ) : (
-                  <button
-                    disabled={!nivelesCompletados.includes(nivel)}
-                    onClick={() => seleccionarNivel(nivel)}
-                  >
-                    Ir al nivel
-                  </button>
-                )}
-                {nivelesCompletados.includes(nivel) && (
-                  <span>Nivel completado</span>
-                )}
-                {!nivelesCompletados.includes(nivel) && nivel < nivelActual && (
-                  <button onClick={() => completarNivel(nivel)}>
-                    Marcar como completado
-                  </button>
-                )}
-              </div>
-            ))}
-          </div>
-        </>
+      {user.length !== 0 ? (
+        <section>
+          <h1>Unidad {user.progress.unit}:</h1>
+          { levels.length !== 0 ? levels.exercises.map((e, i) =>(
+            <div key={i}>
+            <p>{e.question}</p>
+            {
+              e.answers.map((ans, i) => (
+                <button key={i} onClick={() => saveAnswer(i)}>{ans.text}</button>
+              ))
+            }
+            </div>
+          )): '' }
+        </section>
       ) : (
         <p>Debes iniciar sesión para acceder a esta página.</p>
       )}

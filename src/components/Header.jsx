@@ -3,6 +3,38 @@ import styled, { css } from "styled-components";
 import AuthModal from "./AuthModal";
 import { useState } from "react";
 
+const Header = () => {
+  const [isNavOpen, setNavOpen] = useState(false);
+
+  const handleNavToggle = () => {
+    setNavOpen(!isNavOpen);
+  };
+  return (
+    <HeaderStyled isNavOpen={isNavOpen}>
+      <div className="logo">
+        <img src="./logo.svg" alt="Logo" />
+        Sefer Ivrit
+      </div>
+      <nav>
+        <ul className="common">
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+          <li>
+            <Link to="/words">Alfabeto</Link>
+          </li>
+        </ul>
+        <ul className="user">
+          <AuthModal />
+        </ul>
+      </nav>
+      <img className="book" src="./book.svg" onClick={handleNavToggle} />
+    </HeaderStyled>
+  );
+};
+
+export default Header;
+
 const HeaderStyled = styled.header`
   background-color: #e57c23;
   display: flex;
@@ -24,13 +56,19 @@ const HeaderStyled = styled.header`
     }
     .user {
       li {
+        display: flex;
+        border-radius: 5px;
+        transition: ease-in-out 0.2s;
+        padding: 5px;
+        margin: 0 5px;
+        align-items: center;
+        &:hover {
+          cursor: pointer;
+          background-color: #fff;
+          color: #000;
+        }
         img {
-          width: 40px;
-          filter: invert(100%) sepia(100%) saturate(100%) hue-rotate(0deg)
-            brightness(100%) contrast(100%);
-          &:hover {
-            cursor: pointer;
-          }
+          height: 30px;
         }
       }
     }
@@ -112,36 +150,3 @@ const HeaderStyled = styled.header`
     }
   }
 `;
-
-const Header = () => {
-
-  const [isNavOpen, setNavOpen] = useState(false);
-
-  const handleNavToggle = () => {
-    setNavOpen(!isNavOpen);
-  };
-  return (
-    <HeaderStyled isNavOpen={isNavOpen}>
-      <div className="logo">
-        <img src="./logo.svg" alt="Logo" />
-        Sefer Ivrit
-      </div>
-      <nav>
-        <ul className="common">
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/words">Alfabeto</Link>
-          </li>
-        </ul>
-        <ul className="user">
-          <AuthModal />
-        </ul>
-      </nav>
-      <img className="book" src="./book.svg" onClick={handleNavToggle} />
-    </HeaderStyled>
-  );
-};
-
-export default Header;

@@ -3,26 +3,32 @@ import { createContext, useState, useEffect } from "react";
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState([]);
 
-  const updateLoggedInStatus = (status) => {
-    setIsLoggedIn(status);
+  const updateUser = (status) => {
+    setUser(status);
   };
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_APP_URL}/api/auth/checkLoggedIn`, {
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
+  fetch(`${import.meta.env.VITE_APP_URL}/api/auth/checkLoggedIn`, {
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.isLoggedIn) {
+        setUser(data.user);
+      } else {
+        setUser([]);
       }
     })
-      .then((response) => response.json())
-      .then((data) => setIsLoggedIn(data.isLoggedIn))
-      .catch((error) => console.log(error));
-  }, []);
+    .catch((error) => console.log(error));
+}, []);
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, updateLoggedInStatus }}>
+    <AuthContext.Provider value={{ user, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

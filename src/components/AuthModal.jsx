@@ -1,9 +1,122 @@
 import { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import AuthForm from "./AuthForm";
-import AOS from 'aos';
-import 'aos/dist/aos.css';
+import AOS from "aos";
+import "aos/dist/aos.css";
 import { AuthContext } from "../context/AuthContext";
+
+const AuthModal = () => {
+  const { user, updateUser } = useContext(AuthContext);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isRegistering, setIsRegistering] = useState(false);
+
+  const handleLogout = () => {
+    fetch(`${import.meta.env.VITE_APP_URL}/api/auth/logout`, {
+      credentials: "include",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          updateUser([]); // Actualizar el estado de inicio de sesión
+          closeModal();
+        } else {
+          console.log(data);
+        }
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setIsRegistering(false);
+  };
+
+  const handleToggleForm = () => {
+    setIsRegistering(!isRegistering);
+  };
+
+  useEffect(() => {
+    AOS.init();
+  }, []);
+
+  return (
+    <>
+      {user.length !== 0 ? (
+        <li onClick={openModal}>
+          <img src={user.profileImg} />
+          <p>XP {user.xp}</p>
+        </li>
+      ) : (
+        <li>
+          <img src="/user.svg" onClick={openModal} />
+        </li>
+      )}
+
+      {isModalOpen && (
+        <ModalWrapper className="aos-init">
+          <ModalContent data-aos="fade-down">
+            <CloseButton onClick={closeModal} />
+            {user.length !== 0 ? (
+              <>
+                <h2>¿Deseas cerrar sesión?</h2>
+                <button onClick={handleLogout}>Cerrar sesión</button>
+              </>
+            ) : (
+              <>
+                {isRegistering ? (
+                  <>
+                    <AuthForm
+                      endpoint={`${
+                        import.meta.env.VITE_APP_URL
+                      }/api/auth/register`}
+                      title="Registro"
+                      submitText="Registrarse"
+                      includeUsername
+                      includeEmail
+                      includePassword
+                    />
+                    <p>
+                      ¿Ya tienes una cuenta?{" "}
+                      <button onClick={handleToggleForm}>Iniciar sesión</button>
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <AuthForm
+                      endpoint={`${
+                        import.meta.env.VITE_APP_URL
+                      }/api/auth/login`}
+                      title="Iniciar sesión"
+                      submitText="Iniciar sesión"
+                      includeEmail
+                      includePassword
+                    />
+                    <p>
+                      ¿No tienes una cuenta?{" "}
+                      <button onClick={handleToggleForm}>
+                        Regístrate aquí
+                      </button>
+                    </p>
+                  </>
+                )}
+              </>
+            )}
+          </ModalContent>
+        </ModalWrapper>
+      )}
+    </>
+  );
+};
+
+export default AuthModal;
 
 const ModalWrapper = styled.div`
   position: fixed;
@@ -23,6 +136,7 @@ const ModalContent = styled.div`
   padding: 20px;
   border-radius: 5px;
   width: 400px;
+  line-height: 2.5;
   position: relative;
   text-align: center;
   form {
@@ -85,107 +199,3 @@ const CloseButton = styled.button`
     transform: translate(-50%, -50%) rotate(-45deg);
   }
 `;
-
-const AuthModal = () => {
-  const { isLoggedIn, updateLoggedInStatus } = useContext(AuthContext);
-  console.log(isLoggedIn);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isRegistering, setIsRegistering] = useState(false);
-
-  const handleLogout = () => {
-    fetch(`${import.meta.env.VITE_APP_URL}/api/auth/logout`, {
-      credentials: 'include',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          updateLoggedInStatus(false); // Actualizar el estado de inicio de sesión
-          closeModal();
-        } else {
-          console.log(data);
-        }
-      })
-      .catch((error) => console.log(error));
-  };
-
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setIsRegistering(false);
-  };
-
-  const handleToggleForm = () => {
-    setIsRegistering(!isRegistering);
-  };
-
-  useEffect(() => {
-    AOS.init();
-  }, []);
-
-  return (
-    <>
-      <li>
-        {isLoggedIn ? (
-          <img src="./Babi.jpg" onClick={openModal} />
-        ) : (
-          <img src="./userIcon.svg" onClick={openModal} />
-        )}
-      </li>
-      {isModalOpen && (
-        <ModalWrapper className="aos-init">
-          <ModalContent data-aos="fade-down">
-            <CloseButton onClick={closeModal} />
-            {isLoggedIn ? (
-              <>
-                <h2>¿Deseas cerrar sesión?</h2>
-                <button onClick={handleLogout}>Cerrar sesión</button>
-              </>
-            ) : (
-              <>
-                {isRegistering ? (
-                  <>
-                    <AuthForm
-                      endpoint={`${import.meta.env.VITE_APP_URL}/api/auth/register`}
-                      title="Registro"
-                      submitText="Registrarse"
-                      includeUsername
-                      includeEmail
-                      includePassword
-                    />
-                    <p>
-                      ¿Ya tienes una cuenta?{" "}
-                      <button onClick={handleToggleForm}>Iniciar sesión</button>
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    <AuthForm
-                      endpoint={`${import.meta.env.VITE_APP_URL}/api/auth/login`}
-                      title="Iniciar sesión"
-                      submitText="Iniciar sesión"
-                      includeEmail
-                      includePassword
-                    />
-                    <p>
-                      ¿No tienes una cuenta?{" "}
-                      <button onClick={handleToggleForm}>Regístrate aquí</button>
-                    </p>
-                  </>
-                )}
-              </>
-            )}
-          </ModalContent>
-        </ModalWrapper>
-      )}
-    </>
-  );
-};
-
-export default AuthModal;
