@@ -5,16 +5,18 @@ const api = axios.create({
   withCredentials: true,
 });
 
-const getLevels = async (level, unit) => {
-    try {
-      const response = await api.get(`/?level=${level}&unit=${unit}`);
-      return response.data;
-    } catch (error) {
-      console.error(error);
-      throw new Error('Error al obtener los niveles');
-    }
-  };
+const getLevels = async (unit, level) => {
+  try {
+    const response = await api.get(
+      level !== 0 ? `/?unit=${unit}` : `/?unit=${level}&level=${level}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Error al obtener los niveles");
+  }
+};
 
-const learnAPI = { getLevels }
+const learnAPI = { getLevels };
 
-export default learnAPI
+export default learnAPI;

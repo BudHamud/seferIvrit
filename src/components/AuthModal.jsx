@@ -4,14 +4,17 @@ import AuthForm from "./AuthForm";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { AuthContext } from "../context/AuthContext";
+import { useNavigate } from 'react-router-dom'
 
 const AuthModal = () => {
   const { user, updateUser } = useContext(AuthContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
 
+  const navigate = useNavigate()
+
   const handleLogout = () => {
-    fetch(`${import.meta.env.VITE_APP_URL}/api/auth/logout`, {
+    fetch(`${import.meta.env.VITE_APP_URL}/api/user/logout`, {
       credentials: "include",
       method: "POST",
       headers: {
@@ -21,6 +24,7 @@ const AuthModal = () => {
       .then((response) => response.json())
       .then((data) => {
         if (data.success) {
+          navigate('/')
           updateUser([]); // Actualizar el estado de inicio de sesión
           closeModal();
         } else {
@@ -76,7 +80,7 @@ const AuthModal = () => {
                     <AuthForm
                       endpoint={`${
                         import.meta.env.VITE_APP_URL
-                      }/api/auth/register`}
+                      }/api/user/register`}
                       title="Registro"
                       submitText="Registrarse"
                       includeUsername
@@ -93,7 +97,7 @@ const AuthModal = () => {
                     <AuthForm
                       endpoint={`${
                         import.meta.env.VITE_APP_URL
-                      }/api/auth/login`}
+                      }/api/user/login`}
                       title="Iniciar sesión"
                       submitText="Iniciar sesión"
                       includeEmail

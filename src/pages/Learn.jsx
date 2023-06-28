@@ -1,71 +1,116 @@
-import { useState, useContext, useEffect } from "react";
-import { AuthContext } from "../context/AuthContext";
-import learnAPI from "../api/learnAPI";
+import { useContext, useState } from "react";
+import Loading from "../components/Loading";
+import GetUnit from "../hooks/GetUnit";
+import Answers from "../components/Answers";
 import styled from "styled-components";
-
-const LearnStyle = styled.main`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  ul {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    li {
-      list-style: none;
-    }
-  }
-`;
+import Results from "../components/Results";
+import { Link } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
+import userAPI from "../api/userAPI";
 
 const Learn = () => {
-  const { user } = useContext(AuthContext);
-  const [levels, setLevels] = useState([]);
-  const [ansArr, setAns] = useState([]) 
+  const { user, updateUser } = useContext(AuthContext);
+  const [loading, unit] = GetUnit();
+  const [actual, setActual] = useState(0);
+  const [totalXP, setXP] = useState(0);
+  const [resultArr, setResult] = useState([]);
 
-  useEffect(() => {
-    const fetchLevels = async () => {
-      try {
-        const level = user.progress.level;
-        const unit = user.progress.unit;
-        const levelArr = await learnAPI.getLevels(level, unit);
-        setLevels(levelArr[0]);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    if (user.length !== 0) {
-      fetchLevels();
+  const nextQuestion = (isCorrect) => {
+    if (isCorrect) {
+      setXP((prevXP) => prevXP + 5);
     }
-  }, [user]);
-
-  const saveAnswer = (i) => {
-    let arr = ansArr
-    arr.push(levels.exercises[0].answers[i].isCorrect)
-    setAns(arr)
-  }
+  
+    if (actual === unit.exercises.length - 1) {
+      const updateData = {
+        xp: isCorrect ? totalXP + 5 : totalXP,
+        unit: unit.unit,
+        level: unit.level,
+        id: user._id,
+      };
+  
+      userAPI.updateStats(updateData);
+      updateUser(user);
+    }
+  
+    let arr = resultArr;
+    arr.push(isCorrect);
+    setActual(actual + 1);
+    setResult(arr);
+  };
 
   return (
     <LearnStyle>
-      {user.length !== 0 ? (
-        <section>
-          <h1>Unidad {user.progress.unit}:</h1>
-          { levels.length !== 0 ? levels.exercises.map((e, i) =>(
-            <div key={i}>
-            <p>{e.question}</p>
-            {
-              e.answers.map((ans, i) => (
-                <button key={i} onClick={() => saveAnswer(i)}>{ans.text}</button>
-              ))
-            }
-            </div>
-          )): '' }
-        </section>
+      {loading ? (
+        <Loading />
       ) : (
-        <p>Debes iniciar sesión para acceder a esta página.</p>
+        <section>
+          <Link to={"/unit"}>Volver</Link>
+          <div className="progressBar" style={{ width: `${actual * 25}%` }} />
+          {actual === unit.exercises.length ? (
+            <div className="result">
+              <p>Tu resultado:</p>
+              <Results results={resultArr} />
+              <p>Ganaste {totalXP} puntos de XP</p>
+            </div>
+          ) : (
+            <>
+              <p>{unit.exercises[actual].question}</p>
+              <Answers
+                ansArr={unit.exercises[actual].answers}
+                myFunc={nextQuestion}
+              />
+            </>
+          )}
+        </section>
       )}
     </LearnStyle>
   );
 };
 
 export default Learn;
+
+const LearnStyle = styled.main`
+  section {
+    width: 500px;
+    a {
+      padding: 5px;
+      border-radius: 5px;
+      color: #fff;
+      transition: 0.2s ease-in-out;
+      :hover {
+        background-color: #fff;
+        color: #000;
+      }
+    }
+    .progressBar {
+      height: 10px;
+      background-color: #e0e0e0;
+      width: 0;
+      transition: width 0.3s ease-in-out;
+      margin: 20px 0;
+    }
+    .result {
+      .resultBlock {
+        margin: 10px 0;
+      }
+    }
+    .answers {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      button {
+        background-color: transparent;
+        border: solid 2px #fff;
+        border-radius: 5px;
+        padding: 8px;
+        transition: ease-in-out 0.2s;
+        :hover {
+          background-color: #fff;
+          color: #000;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+`;

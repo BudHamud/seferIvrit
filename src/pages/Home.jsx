@@ -17,7 +17,7 @@ const Home = () => {
         imgSrc={"./dictionary.svg"}
         title={'Aprender'}
         text={"Participa en juegos interactivos para mejorar tus habilidades."}
-        to={["/learn", "Explorar"]}
+        to={["/unit", "Explorar"]}
       />
 
       <CardHome
