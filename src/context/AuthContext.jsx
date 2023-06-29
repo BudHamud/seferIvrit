@@ -6,26 +6,26 @@ const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState([]);
 
+  const checkLoggedIn = async () => {
+    try {
+      const data = await userAPI.getUserStatus();
+      if (data.isLoggedIn) {
+        setUser(data.user);
+      } else {
+        setUser([]);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const updateUser = (user) => {
     setUser(user);
   };
 
   useEffect(() => {
-    const checkLoggedIn = async () => {
-      try {
-        const data = await userAPI.getUserStatus();
-        if (data.isLoggedIn) {
-          setUser(data.user);
-        } else {
-          setUser([]);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
     checkLoggedIn();
-  }, [user]);
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user, updateUser }}>

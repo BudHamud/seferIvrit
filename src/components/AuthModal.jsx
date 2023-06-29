@@ -4,34 +4,25 @@ import AuthForm from "./AuthForm";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { AuthContext } from "../context/AuthContext";
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
+import userAPI from "../api/userAPI";
 
 const AuthModal = () => {
   const { user, updateUser } = useContext(AuthContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const handleLogout = () => {
-    fetch(`${import.meta.env.VITE_APP_URL}/api/user/logout`, {
-      credentials: "include",
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          navigate('/')
-          updateUser([]); // Actualizar el estado de inicio de sesión
-          closeModal();
-        } else {
-          console.log(data);
-        }
-      })
-      .catch((error) => console.log(error));
+  const handleLogout = async () => {
+    const data = await userAPI.logout();
+    if (data.success) {
+      navigate("/");
+      updateUser([]);
+      closeModal();
+    } else {
+      console.log(data);
+    }
   };
 
   const openModal = () => {
@@ -78,9 +69,7 @@ const AuthModal = () => {
                 {isRegistering ? (
                   <>
                     <AuthForm
-                      endpoint={`${
-                        import.meta.env.VITE_APP_URL
-                      }/api/user/register`}
+                      action="register"
                       title="Registro"
                       submitText="Registrarse"
                       includeUsername
@@ -95,9 +84,7 @@ const AuthModal = () => {
                 ) : (
                   <>
                     <AuthForm
-                      endpoint={`${
-                        import.meta.env.VITE_APP_URL
-                      }/api/user/login`}
+                      action="login"
                       title="Iniciar sesión"
                       submitText="Iniciar sesión"
                       includeEmail

@@ -1,13 +1,21 @@
-import { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
+import { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
+import userAPI from "../api/userAPI";
 
-const AuthForm = ({ endpoint, title, submitText, includeUsername, includeEmail, includePassword }) => {
+const AuthForm = ({
+  action,
+  title,
+  submitText,
+  includeUsername,
+  includeEmail,
+  includePassword,
+}) => {
   const { updateUser } = useContext(AuthContext);
-  
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -16,31 +24,25 @@ const AuthForm = ({ endpoint, title, submitText, includeUsername, includeEmail, 
     try {
       const userData = {
         email,
-        password
+        password,
       };
 
       if (includeUsername) {
         userData.username = username;
       }
 
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(userData)
-      });
+      const response = await userAPI[action](userData);
 
-      if (response.ok) {
-        const data = await response.json();
-        updateUser(data.user)
+      if (response) {
+        const data = await response;
+        updateUser(data.user);
+        navigate("/unit");
       } else {
-        const errorData = await response.json();
-        console.log('Authentication error:', errorData.message);
+        const errorData = await response;
+        console.log("Authentication error:", errorData.message);
       }
     } catch (error) {
-      console.log('Error sending the request:', error);
+      console.log("Error sending the request:", error);
     }
   };
 
@@ -48,7 +50,7 @@ const AuthForm = ({ endpoint, title, submitText, includeUsername, includeEmail, 
     const isLoggedIn = true; // Replace with actual backend check
 
     if (isLoggedIn) {
-      navigate('/');
+      navigate("/");
     }
   };
 

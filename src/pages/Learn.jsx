@@ -29,7 +29,7 @@ const Learn = () => {
       };
   
       userAPI.updateStats(updateData);
-      updateUser(user);
+      updateUser({ ...user, xp: isCorrect ? user.xp + totalXP + 5 : user.xp + totalXP });
     }
   
     let arr = resultArr;

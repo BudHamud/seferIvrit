@@ -4,6 +4,7 @@ const WordStyled = styled.main`
 h3 {
     display: flex;
     justify-content: center;
+    margin-bottom: 20px;
 }
   .alefbeth {
     display: flex;
