@@ -1,13 +1,34 @@
 import { useState, useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import learnAPI from "../api/learnAPI";
 import styled from "styled-components";
 import Loading from "../components/Loading";
-import { Link } from "react-router-dom";
+import Modal from "../components/Modal";
 
 const Learn = () => {
   const { user } = useContext(AuthContext);
   const [levels, setLevels] = useState([]);
+  const [message, setMsg] = useState([]);
+  const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const checkLevel = (i) => {
+    if (user.progress.level >= i) {
+      navigate("/learn");
+    } else {
+      openModal();
+      setMsg("Todavía no tienes acceso a este contenido.");
+    }
+  };
 
   useEffect(() => {
     const fetchLevels = async () => {
@@ -31,10 +52,10 @@ const Learn = () => {
       {user.length !== 0 ? (
         <section>
           {levels.length !== 0 ? (
-            levels.map((e) => (
-              <Link key={e._id} to={"/learn"}>
+            levels.map((e, i) => (
+              <button key={e._id} onClick={() => checkLevel(i + 1)}>
                 {e.level}
-              </Link>
+              </button>
             ))
           ) : (
             <Loading />
@@ -43,6 +64,9 @@ const Learn = () => {
       ) : (
         <p>Debes iniciar sesión para acceder a esta página.</p>
       )}
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <p>{message}</p>
+      </Modal>
     </UnitStyle>
   );
 };
@@ -56,11 +80,10 @@ const UnitStyle = styled.main`
   section {
     display: flex;
     gap: 10px;
-    a {
+    button {
       color: #fff;
       padding: 10px;
       border-radius: 10px;
-      text-decoration: none;
       background-color: transparent;
       border: solid 2px #e57c23;
       :hover {
