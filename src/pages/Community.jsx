@@ -1,6 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { connect } from "socket.io-client";
 import chatAPI from "../api/chatAPI";
 import styled from "styled-components";
+import { AuthContext } from "../context/AuthContext";
 
 const ChatStyle = styled.main`
   display: grid;
@@ -21,7 +23,29 @@ const ChatStyle = styled.main`
     height: 100%;
     width: 100%;
     .chat {
-      height: 90%;
+      min-height: 70vh;
+      max-height: 70vh;
+      overflow-y: scroll;
+      form {
+        max-height: 250px;
+        align-self: center;
+      }
+      div {
+        margin: 10px;
+        border-radius: 5px;
+        padding: 5px;
+        background-color: #333;
+        width: 50%;
+        display: grid;
+        p {
+          :nth-child(1) {
+            font-size: 12px;
+          }
+          :nth-child(3) {
+            justify-self: end;
+          }
+        }
+      }
     }
     form {
       border-top: solid 2px #ffc778;
@@ -54,45 +78,51 @@ const ChatStyle = styled.main`
 `;
 
 const Community = () => {
+  const socket = connect(import.meta.env.VITE_APP_URL);
+
+  const { user } = useContext(AuthContext);
   const [messages, setMessages] = useState([]);
   const [currentMessage, setCurrentMessage] = useState("");
 
-  const getChats = async () => {
-    try {
-      const chats = await chatAPI.getChats();
-      setMessages(chats);
-    } catch (error) {
-      console.error("Error al obtener los chats:", error);
-    }
-  };
+  const getMsgs = async () => {
+    const msgs = await chatAPI.getChats()
+    setMessages(msgs)
+  }
 
-  const sendMessage = async () => {
-    try {
-      // Lógica para enviar el mensaje utilizando chatAPI
-      // Obtener el ID del chat o pasarlo como argumento
-      // Utilizar una función en chatAPI para enviar el mensaje al backend
-      // Actualizar el estado local con el mensaje enviado
-    } catch (error) {
-      console.error("Error al enviar el mensaje:", error);
-    }
+  const receiveMessage = (newMessage) => {
+    setMessages((prevMessages) => [...prevMessages, newMessage]);
   };
 
   useEffect(() => {
-    getChats();
+    getMsgs()
+  }, [])
+
+  useEffect(() => {
+    socket.on("message", receiveMessage);
   }, []);
 
-  //   useEffect(() => {
-  //     const getMessages = async () => {
-  //       try {
-  //         // Obtener los mensajes del chat utilizando chatAPI
-  //         // Actualizar el estado local con los mensajes obtenidos
-  //       } catch (error) {
-  //         console.error("Error al obtener los mensajes del chat:", error);
-  //       }
-  //     };
+  const sendMessage = (e) => {
+    e.preventDefault();
+    if (currentMessage.trim() !== "") {
+      const newMessage = { text: currentMessage, user: user._id };
+      socket.emit("message", newMessage);
+      setCurrentMessage("");
+    }
+  };
 
-  //     getMessages();
-  //   }, [chatId]);
+  const formatDateTime = (dateTimeString) => {
+    const messageDate = dateTimeString ? new Date(dateTimeString) : new Date();
+
+    const formattedTime = messageDate.toLocaleTimeString([], {
+      hour: "numeric",
+      minute: "2-digit",
+    });
+    return formattedTime;
+  };
+
+  if (user.length === 0) {
+    return <main><p>No tienes acceso a este contenido</p></main>
+  }
 
   return (
     <ChatStyle>
@@ -104,11 +134,11 @@ const Community = () => {
       </section>
       <section className="messages">
         <div className="chat">
-          {messages.map((message) => (
-            <div key={message._id}>
+          {messages.map((message, i) => (
+            <div key={i}>
+              <p>{message.user === user._id ? "Yo" : message.user}</p>
               <p>{message.text}</p>
-              <p>{message.user}</p>
-              <p>{message.timestamp}</p>
+              <p>{formatDateTime(message.timestamp)}</p>
             </div>
           ))}
         </div>
