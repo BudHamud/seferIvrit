@@ -15,8 +15,18 @@ const ChatStyle = styled.main`
     flex-direction: column;
     align-items: center;
     justify-content: start;
-    .addConversation {
-      background-color: #fff;
+    .active {
+      background-color: #e57c23;
+    }
+    div {
+      width: 100%;
+      padding: 20px 0;
+      background-color: #333;
+      border-bottom: solid 1px #FFF;
+
+      p {
+        padding-left: 10px;
+      }
     }
   }
   .messages {
@@ -26,6 +36,9 @@ const ChatStyle = styled.main`
       min-height: 70vh;
       max-height: 70vh;
       overflow-y: scroll;
+      .me {
+        margin: 10px 10px 10px auto;
+      }
       form {
         max-height: 250px;
         align-self: center;
@@ -83,6 +96,7 @@ const Community = () => {
   const { user } = useContext(AuthContext);
   const [messages, setMessages] = useState([]);
   const [currentMessage, setCurrentMessage] = useState("");
+  const [active, setActive] = useState(true);
 
   const getMsgs = async () => {
     const msgs = await chatAPI.getChats()
@@ -127,15 +141,23 @@ const Community = () => {
   return (
     <ChatStyle>
       <section className="history">
-        <div className="addConversation">
-          <button>Comenzar conversacion</button>
+        <div className={active ? 'active' : ''}>
+        <p>Chat General</p>
+        <p>{ messages.length !== 0 ? messages[messages.length - 1].text : '' }</p>
         </div>
-        Sin mensajes
+        <div>
+        <p>Purquito</p>
+        <p>Hola</p>
+        </div>
+        <div>
+        <p>Paulina</p>
+        <p>Tremendo chabon</p>
+        </div>
       </section>
       <section className="messages">
         <div className="chat">
           {messages.map((message, i) => (
-            <div key={i}>
+            <div key={i} className={message.user === user._id ? 'me' : ''} >
               <p>{message.user === user._id ? "Yo" : message.user}</p>
               <p>{message.text}</p>
               <p>{formatDateTime(message.timestamp)}</p>
