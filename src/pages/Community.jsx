@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { connect } from "socket.io-client";
 import chatAPI from "../api/chatAPI";
 import styled from "styled-components";
@@ -6,7 +6,7 @@ import { AuthContext } from "../context/AuthContext";
 
 const ChatStyle = styled.main`
   display: grid;
-  grid-template-columns: 400px 2fr;
+  grid-template-columns: 400px 1fr;
   .history {
     height: 100%;
     width: 100%;
@@ -63,6 +63,7 @@ const ChatStyle = styled.main`
       background-color: transparent;
       :hover {
         background-color: #e57c23;
+        cursor: pointer;
       }
     }
   }
@@ -73,14 +74,19 @@ const ChatStyle = styled.main`
       min-height: 70vh;
       max-height: 70vh;
       overflow-y: scroll;
-      .me {
-        margin: 10px 10px 10px auto;
+      ::-webkit-scrollbar {
+        background-color: transparent;
+        width: 10px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background-color: #333;
+        border-radius: 5px;
       }
       form {
         max-height: 250px;
         align-self: center;
       }
-      div {
+      .bubble {
         margin: 10px;
         border-radius: 5px;
         padding: 5px;
@@ -95,6 +101,10 @@ const ChatStyle = styled.main`
             justify-self: end;
           }
         }
+      }
+      .me {
+        background-color: #122;
+        margin: 10px 10px 10px auto;
       }
     }
     form {
@@ -125,10 +135,33 @@ const ChatStyle = styled.main`
       }
     }
   }
+  @media (width < 1024px) {
+    grid-template-columns: 200px 1fr;
+  }
+  @media (width < 768px) {
+    grid-template-columns: 1fr;
+    .history {
+      display: none;
+    }
+    .show {
+      display: flex;
+    }
+  }
+  @media (width < 425px) {
+    .messages {
+      .chat {
+        .bubble {
+          width: 80%;
+        }
+      }
+    }
+  }
 `;
 
 const Community = () => {
   const socket = connect(import.meta.env.VITE_APP_URL);
+
+  const messagesEndRef = useRef(null);
 
   const { user } = useContext(AuthContext);
   const [messages, setMessages] = useState([]);
@@ -142,6 +175,14 @@ const Community = () => {
 
   const receiveMessage = (newMessage) => {
     setMessages((prevMessages) => [...prevMessages, newMessage]);
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
@@ -197,19 +238,23 @@ const Community = () => {
   const addUser = (e) => {
     e.preventDefault();
     console.log(e);
-  }
+  };
 
   return (
     <ChatStyle>
       <section className="history">
         <div className="newChat">
           <form onSubmit={addUser}>
-          <input name="user" placeholder="adroper" />
-          <button type={'submit'}>Conversar</button>
+            <input name="user" placeholder="adroper" />
+            <button type={"submit"}>Conversar</button>
           </form>
         </div>
         {myArr.map((e, i) => (
-          <div key={i} onClick={() => setActive(i)} className={active === i ? "chat active" : "chat inactive"}>
+          <div
+            key={i}
+            onClick={() => setActive(i)}
+            className={active === i ? "chat active" : "chat inactive"}
+          >
             <h3>{e.name}</h3>
             <p>{e.message}</p>
           </div>
@@ -218,12 +263,16 @@ const Community = () => {
       <section className="messages">
         <div className="chat">
           {messages.map((message, i) => (
-            <div key={i} className={message.user === user._id ? "me" : ""}>
+            <div
+              key={i}
+              className={message.user === user._id ? "me bubble" : "bubble"}
+            >
               <p>{message.user === user._id ? "Yo" : message.user}</p>
               <p>{message.text}</p>
               <p>{formatDateTime(message.timestamp)}</p>
             </div>
           ))}
+          <div ref={messagesEndRef} />
         </div>
         <form onSubmit={sendMessage}>
           <input

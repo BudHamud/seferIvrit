@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import Loading from "../components/Loading";
 import GetUnit from "../hooks/GetUnit";
 import Answers from "../components/Answers";
@@ -53,13 +53,13 @@ const Learn = () => {
               <p>Ganaste {totalXP} puntos de XP</p>
             </div>
           ) : (
-            <>
+            <React.Fragment>
               <p>{unit.exercises[actual].question}</p>
               <Answers
                 ansArr={unit.exercises[actual].answers}
                 myFunc={nextQuestion}
               />
-            </>
+            </React.Fragment>
           )}
         </section>
       )}
@@ -111,6 +111,11 @@ const LearnStyle = styled.main`
           cursor: pointer;
         }
       }
+    }
+  }
+  @media (width < 768px) {
+    section {
+      width: 90%;
     }
   }
 `;

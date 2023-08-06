@@ -26,6 +26,10 @@ const Header = () => {
         </ul>
         <ul className="user">
           <AuthModal />
+          <li className="unread">
+            <Link to={'/chat'}><img src="/chat.svg" /></Link>
+            <div />
+          </li>
         </ul>
       </nav>
       <img className="book" src="./book.svg" onClick={handleNavToggle} />
@@ -42,12 +46,29 @@ const HeaderStyled = styled.header`
   justify-content: space-around;
   nav {
     display: flex;
+    ul:nth-child(1) {
+      gap: 15px;
+    }
     ul {
       display: flex;
       align-items: center;
-      gap: 15px;
+      .unread {
+        position: relative;
+        div {
+          display: none;
+          right: 6px;
+          top: 8px;
+          position: absolute;
+          height: 8px;
+          width: 8px;
+          border-radius: 50%;
+          background-color: #FCC;
+        }
+      }
       li {
         list-style: none;
+        display: flex;
+        align-items: center;
         a {
           text-decoration: none;
           color: #fff;
