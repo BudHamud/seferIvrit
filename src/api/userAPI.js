@@ -5,21 +5,30 @@ const api = axios.create({
   withCredentials: true,
 });
 
+const findUser = async (username) => {
+  try {
+    const response = await api.get(`/user/${username}`)
+    return response.data
+  } catch (err) {
+    throw new Error('Error al buscar usuario')
+  }
+}
+
 const login = async (data) => {
   try {
     const response = await api.post('/login', { data })
-    return response.data
+    return { data: response.data, error: null };
   } catch (err) {
-    throw new Error('Error en el login')
+    return { data: null, error: err.response ? err.response.data.message : 'An error occurred' };
   }
 }
 
 const register = async (data) => {
   try {
     const response = await api.post('/register', { data })
-    return response.data
+    return { data: response.data, error: null };
   } catch (err) {
-    throw new Error('Error en el register')
+    return { data: null, error: err.response ? err.response.data.message : 'An error occurred' };
   }
 }
 
@@ -52,6 +61,6 @@ const updateStats = async (data) => {
   }
 };
 
-const userAPI = { login, register, logout, getUserStatus, updateStats };
+const userAPI = { findUser, login, register, logout, getUserStatus, updateStats };
 
 export default userAPI;

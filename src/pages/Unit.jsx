@@ -21,9 +21,9 @@ const Learn = () => {
     setIsModalOpen(false);
   };
 
-  const checkLevel = (i) => {
-    if (user.progress.level >= i) {
-      navigate("/learn");
+  const checkLevel = (num, to) => {
+    if (user.progress.level >= num) {
+      navigate(`/${to}/${num}`);
     } else {
       openModal();
       setMsg("Todavía no tienes acceso a este contenido.");
@@ -46,24 +46,38 @@ const Learn = () => {
     }
   }, [user]);
 
+  if (levels.length === 0) {
+    return (
+      <main>
+        <Loading />
+      </main>
+    );
+  }
+
   return (
     <UnitStyle>
-      {levels.length !== 0 && <h1>Unidad {user.progress.unit}:</h1>}
-      {user.length !== 0 ? (
-        <section>
-          {levels.length !== 0 ? (
-            levels.map((e, i) => (
-              <button key={e._id} onClick={() => checkLevel(i + 1)}>
-                {e.level}
-              </button>
-            ))
-          ) : (
-            <Loading />
-          )}
-        </section>
-      ) : (
-        <p>Debes iniciar sesión para acceder a esta página.</p>
-      )}
+      <h1>Unidad {user.progress.unit}</h1>
+      <section>
+        <h2>Ejercicios:</h2>
+        <article>
+          {levels.map((e, i) => (
+            <button key={e._id} onClick={() => checkLevel((i + 1), 'read')}>
+              {e.level}. Alfabeto
+            </button>
+          ))}
+        </article>
+      </section>
+
+      <section>
+        <h2>Lectura:</h2>
+        <article>
+          {levels.map((e, i) => (
+            <button key={e._id} onClick={() => checkLevel(i + 1, 'learn')}>
+              {e.level}. Palabras
+            </button>
+          ))}
+        </article>
+      </section>
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <p>{message}</p>
       </Modal>
@@ -78,17 +92,21 @@ const UnitStyle = styled.main`
     margin-bottom: 20px;
   }
   section {
-    display: flex;
-    gap: 10px;
-    button {
-      color: #fff;
-      padding: 10px;
-      border-radius: 10px;
-      background-color: transparent;
-      border: solid 2px #e57c23;
-      :hover {
-        background-color: #e57c23;
-        cursor: pointer;
+    article {
+      margin: 20px 0;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      button {
+        color: #fff;
+        padding: 10px;
+        border-radius: 10px;
+        background-color: transparent;
+        border: solid 2px #e57c23;
+        :hover {
+          background-color: #e57c23;
+          cursor: pointer;
+        }
       }
     }
   }

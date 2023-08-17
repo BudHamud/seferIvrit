@@ -11,20 +11,23 @@ const Header = () => {
   };
   return (
     <HeaderStyled isNavOpen={isNavOpen}>
-      <div className="logo">
+      <Link to={'/'} className="logo">
         <img src="./logo.svg" alt="Logo" />
         Beit Sefer
-      </div>
+      </Link>
       <nav>
         <ul className="common">
           <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/words">Alfabeto</Link>
+            <Link to="/unit">
+              <img src="/learn.svg" alt="learn" />
+            </Link>
           </li>
         </ul>
         <ul className="user">
+          <li className="unread">
+            <Link to={'/chat'}><img src="/chat.svg" /></Link>
+            <div />
+          </li>
           <AuthModal />
         </ul>
       </nav>
@@ -40,22 +43,27 @@ const HeaderStyled = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-around;
-  margin-bottom: 20px;
   nav {
     display: flex;
+    ul:nth-child(1) {
+      gap: 15px;
+    }
     ul {
       display: flex;
       align-items: center;
-      gap: 15px;
-      li {
-        list-style: none;
-        a {
-          text-decoration: none;
-          color: #fff;
+      .unread {
+        position: relative;
+        div {
+          display: none;
+          right: 6px;
+          top: 8px;
+          position: absolute;
+          height: 8px;
+          width: 8px;
+          border-radius: 50%;
+          background-color: #FCC;
         }
       }
-    }
-    .user {
       li {
         display: flex;
         border-radius: 5px;
@@ -69,17 +77,29 @@ const HeaderStyled = styled.header`
           color: #000;
         }
         img {
-          height: 30px;
+            width: 30px;
+          }
+        a {
+          text-decoration: none;
+          color: #fff;
         }
       }
     }
   }
   .logo {
+    color: #FFF;
     display: flex;
     align-items: center;
+    transition: ease-in-out .2s;
+    border-radius: 5px;
+    padding-right: 10px;
+    &:hover {
+      background-color: #FFF;
+      color: #000;
+    }
     img {
       width: 50px;
-      margin: 0 10px;
+      margin-right: 10px;
       background-color: #fff;
       border-radius: 5px;
       padding: 5px;
