@@ -1,59 +1,77 @@
 import styled from "styled-components";
-import CardHome from '../components/CardHome'
+import { CardHome } from '../components/Cards'
 
 const Home = () => {
+  const resources = [
+    {
+      img: '/learn.svg',
+      title: 'Aprende',
+      text: 'Ofrecemos una parte en donde poder hacer ejercicios según la unidad en la que te encuentres',
+      to: ['/unit', 'Ir']
+    },
+    {
+      img: '/chat.svg',
+      title: 'Comparte',
+      text: 'En la pestaña de chat podrás hablar con otros alumnos que se encuentren utilizando la plataforma.',
+      to: ['/unit', 'Ir']
+    }
+  ]
+
   return (
     <HomeStyle>
-      <h1>Bienvenidos / ברוך הבא</h1>
+      <section>
+        <article>
+          <h1>Bienvenidos / ברוך הבא</h1>
+          <p>
+            Bienaventuradas aquellas personas que se hayan topado con esta
+            maravillosa plataforma
+          </p>
+        </article>
+        <img src="/logo.svg" alt="logo" />
+      </section>
 
-      <CardHome
-        imgSrc={"./aleph.svg"}
-        title={'Palabras'}
-        text={"Descubre nuevas palabras y amplía tu vocabulario."}
-        to={["/words", "Ver"]}
-      />
-
-      <CardHome
-        imgSrc={"./dictionary.svg"}
-        title={'Aprender'}
-        text={"Participa en juegos interactivos para mejorar tus habilidades."}
-        to={["/unit", "Explorar"]}
-      />
-
-      <CardHome
-        imgSrc={"./jala.png"}
-        title={'Recursos'}
-        text={"Encuentra recursos útiles para aprender y practicar."}
-      />
-
-      <CardHome
-        imgSrc={"./community.svg"}
-        title={'Comunidad'}
-        text={"Únete a nuestra comunidad para compartir experiencias y conocimientos."}
-
-      />
-
-      <CardHome
-        imgSrc={"./credentials.svg"}
-        title={'Iniciar sesión'}
-        text={"Accede a tu cuenta para guardar tus progresos y obtener más beneficios."}
-      />
+      <section>
+      <h2>Recursos que la página ofrece:</h2>
+      <article>
+      {
+        resources.map((e, i) => (
+          <CardHome key={i} item={e} />
+        ))
+      }
+      </article>
+      </section>
     </HomeStyle>
   );
 };
 
 export default Home;
 
-
 const HomeStyle = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 500px;
   margin: 0 auto;
-  h1 {
-    margin-bottom: 20px;
+  section:nth-child(1) {
+    display: flex;
+    img {
+      width: 250px;
+    }
   }
+  section:nth-child(2) {
+    h2 {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    article {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+  }
+`;
+
+export const OldStyles = styled.main`
   section {
     margin-top: 40px;
     display: flex;

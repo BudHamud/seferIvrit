@@ -16,38 +16,37 @@ const AuthForm = ({
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
       const userData = {
         email,
         password,
       };
-
+  
       if (includeUsername) {
         userData.username = username;
       }
-
-      const response = await userAPI[action](userData);
-
-      if (response) {
-        const data = await response;
-        updateUser(data.user);
-        navigate("/unit");
+  
+      const { data, error } = await userAPI[action](userData);
+  
+      if (error) {
+        setError(error);
       } else {
-        const errorData = await response;
-        console.log("Authentication error:", errorData.message);
+        updateUser(data.user);
+        navigate("/exercises");
       }
     } catch (error) {
-      console.log("Error sending the request:", error);
+      console.log('Frontend Error:', error);
     }
-  };
+  };  
 
   const checkLoggedIn = () => {
-    const isLoggedIn = true; // Replace with actual backend check
+    const isLoggedIn = true;
 
     if (isLoggedIn) {
       navigate("/");
@@ -99,6 +98,7 @@ const AuthForm = ({
           </div>
         )}
         <button type="submit">{submitText}</button>
+        {error && <p className="error-message">{error}</p>}
       </form>
     </>
   );

@@ -3,6 +3,7 @@ import { connect } from "socket.io-client";
 import chatAPI from "../api/chatAPI";
 import styled from "styled-components";
 import { AuthContext } from "../context/AuthContext";
+import userAPI from "../api/userAPI";
 
 const ChatStyle = styled.main`
   display: grid;
@@ -15,6 +16,7 @@ const ChatStyle = styled.main`
     flex-direction: column;
     align-items: center;
     justify-content: start;
+    overflow-x: hidden;
     div:nth-child(1) {
       margin: 20px 0;
       display: flex;
@@ -71,6 +73,8 @@ const ChatStyle = styled.main`
     height: 100%;
     width: 100%;
     .chat {
+      display: flex;
+      flex-direction: column-reverse;
       min-height: 70vh;
       max-height: 70vh;
       overflow-y: scroll;
@@ -166,38 +170,45 @@ const Community = () => {
   const { user } = useContext(AuthContext);
   const [messages, setMessages] = useState([]);
   const [currentMessage, setCurrentMessage] = useState("");
+  const [chats, setChats] = useState([]);
   const [active, setActive] = useState(0);
 
-  const getMsgs = async () => {
-    const msgs = await chatAPI.getChats();
-    setMessages(msgs);
+  const sortByDate = (arr) => {
+    return arr.sort((a, b) => {
+      const dateA = new Date(a.timestamp);
+      const dateB = new Date(b.timestamp);
+      return dateB - dateA;
+    });
   };
 
-  const receiveMessage = (newMessage) => {
-    setMessages((prevMessages) => [...prevMessages, newMessage]);
+  const getMsgs = async (chat) => {
+    setActive(chat._id);
+
+    if (chat._id !== 0) {
+      const msgs = await chatAPI.getChats(chat._id);
+      const sorted = sortByDate(msgs.messages);
+      setMessages(sorted.slice(0, 50));
+    }
   };
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  const receiveMessage = (newMsg) => {
+    if (newMsg.chat === active) {
+      setMessages((allMsg) => [
+        { ...newMsg, timestamp: Date.now() },
+        ...allMsg,
+      ]);
+    }
   };
-
-  useEffect(() => {
-    getMsgs();
-  }, []);
 
   useEffect(() => {
     socket.on("message", receiveMessage);
-  }, []);
+  }, [active]);
 
   const sendMessage = (e) => {
     e.preventDefault();
     if (currentMessage.trim() !== "") {
-      const newMessage = { text: currentMessage, user: user._id };
-      socket.emit("message", newMessage);
+      const newMessage = { text: currentMessage, user: user._id, chat: active };
+      socket.emit("message", active, newMessage);
       setCurrentMessage("");
     }
   };
@@ -220,24 +231,11 @@ const Community = () => {
     );
   }
 
-  const myArr = [
-    {
-      name: "Chat General",
-      message: messages.length !== 0 ? messages[messages.length - 1].text : "",
-    },
-    {
-      name: "Jose",
-      message: "Hola, Don Pepito",
-    },
-    {
-      name: "Pepito",
-      message: "Hola, Don Jose",
-    },
-  ];
-
-  const addUser = (e) => {
+  const addUser = async (e) => {
     e.preventDefault();
-    console.log(e);
+    const chatUser = await userAPI.findUser(e.target.user.value);
+    const newChat = await chatAPI.createChat([user._id, chatUser]);
+    setChats([...user.chats, newChat._id]);
   };
 
   return (
@@ -249,29 +247,48 @@ const Community = () => {
             <button type={"submit"}>Conversar</button>
           </form>
         </div>
-        {myArr.map((e, i) => (
-          <div
-            key={i}
-            onClick={() => setActive(i)}
-            className={active === i ? "chat active" : "chat inactive"}
-          >
-            <h3>{e.name}</h3>
-            <p>{e.message}</p>
-          </div>
-        ))}
+
+        {chats.length === 0
+          ? user.chats.map((e, i) => (
+              <div
+                key={i}
+                onClick={() => getMsgs(e)}
+                className={active === e._id ? "chat active" : "chat inactive"}
+              >
+                <h3>
+                  {e.users && e.users.find((e) => e._id !== user._id).username}
+                </h3>
+              </div>
+            ))
+          : chats.map((e, i) => (
+              <div
+                key={i}
+                onClick={() => getMsgs(e)}
+                className={active === e ? "chat active" : "chat inactive"}
+              >
+                <h3>{e === "64d126e7aa3f3e877e40a070" ? "Chat General" : e}</h3>
+              </div>
+            ))}
       </section>
       <section className="messages">
         <div className="chat">
-          {messages.map((message, i) => (
-            <div
-              key={i}
-              className={message.user === user._id ? "me bubble" : "bubble"}
-            >
-              <p>{message.user === user._id ? "Yo" : message.user}</p>
-              <p>{message.text}</p>
-              <p>{formatDateTime(message.timestamp)}</p>
-            </div>
-          ))}
+          {messages.map((message, i) => {
+            const userId = message.user._id ? message.user._id : message.user
+            return (
+              <div
+                key={i}
+                className={
+                  userId === user._id ? "me bubble" : "bubble"
+                }
+              >
+                <p>
+                  {userId === user._id ? "Yo" : message.user.username ? message.user.username : message.user}
+                </p>
+                <p>{message.text}</p>
+                <p>{formatDateTime(message.timestamp)}</p>
+              </div>
+            );
+          })}
           <div ref={messagesEndRef} />
         </div>
         <form onSubmit={sendMessage}>

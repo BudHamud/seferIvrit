@@ -11,25 +11,24 @@ const Header = () => {
   };
   return (
     <HeaderStyled isNavOpen={isNavOpen}>
-      <div className="logo">
+      <Link to={'/'} className="logo">
         <img src="./logo.svg" alt="Logo" />
         Beit Sefer
-      </div>
+      </Link>
       <nav>
         <ul className="common">
           <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/words">Alfabeto</Link>
+            <Link to="/unit">
+              <img src="/learn.svg" alt="learn" />
+            </Link>
           </li>
         </ul>
         <ul className="user">
-          <AuthModal />
           <li className="unread">
             <Link to={'/chat'}><img src="/chat.svg" /></Link>
             <div />
           </li>
+          <AuthModal />
         </ul>
       </nav>
       <img className="book" src="./book.svg" onClick={handleNavToggle} />
@@ -66,17 +65,6 @@ const HeaderStyled = styled.header`
         }
       }
       li {
-        list-style: none;
-        display: flex;
-        align-items: center;
-        a {
-          text-decoration: none;
-          color: #fff;
-        }
-      }
-    }
-    .user {
-      li {
         display: flex;
         border-radius: 5px;
         transition: ease-in-out 0.2s;
@@ -89,17 +77,29 @@ const HeaderStyled = styled.header`
           color: #000;
         }
         img {
-          height: 30px;
+            width: 30px;
+          }
+        a {
+          text-decoration: none;
+          color: #fff;
         }
       }
     }
   }
   .logo {
+    color: #FFF;
     display: flex;
     align-items: center;
+    transition: ease-in-out .2s;
+    border-radius: 5px;
+    padding-right: 10px;
+    &:hover {
+      background-color: #FFF;
+      color: #000;
+    }
     img {
       width: 50px;
-      margin: 0 10px;
+      margin-right: 10px;
       background-color: #fff;
       border-radius: 5px;
       padding: 5px;

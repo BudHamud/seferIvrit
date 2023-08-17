@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useParams } from 'react-router-dom'
 import styled from "styled-components";
 
-const WordStyled = styled.main`
+const ReadStyled = styled.main`
   h3 {
     display: flex;
     justify-content: center;
@@ -42,7 +42,7 @@ const WordStyled = styled.main`
   }
 `;
 
-const Words = () => {
+const Read = () => {
   const [word, setWord] = useState("");
 
   const alefbeth = [
@@ -184,7 +184,7 @@ const Words = () => {
 
 
   return (
-    <WordStyled>
+    <ReadStyled>
       <h3>Clase { lesson }</h3>
       <div className="info">
       <h3>{word === '' ? '' : word.word}</h3>
@@ -199,8 +199,8 @@ const Words = () => {
           </p>
         ))}
       </div>
-    </WordStyled>
+    </ReadStyled>
   );
 };
 
-export default Words;
+export default Read;
