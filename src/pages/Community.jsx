@@ -164,7 +164,6 @@ const ChatStyle = styled.main`
 
 const Community = () => {
   const socket = connect(import.meta.env.VITE_APP_URL);
-
   const messagesEndRef = useRef(null);
 
   const { user } = useContext(AuthContext);
