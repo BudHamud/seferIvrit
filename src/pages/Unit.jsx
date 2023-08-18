@@ -46,14 +46,20 @@ const Learn = () => {
     }
   }, [user]);
 
-  if (levels.length === 0) {
+  if (user.length === 0) {
+    return (
+      <main>
+        <p>No tienes acceso a este contenido</p>
+      </main>
+    );
+  } if (levels.length === 0) {
     return (
       <main>
         <Loading />
       </main>
     );
   }
-
+  
   return (
     <UnitStyle>
       <h1>Unidad {user.progress.unit}</h1>
@@ -61,8 +67,8 @@ const Learn = () => {
         <h2>Ejercicios:</h2>
         <article>
           {levels.map((e, i) => (
-            <button key={e._id} onClick={() => checkLevel((i + 1), 'read')}>
-              {e.level}. Alfabeto
+            <button key={e._id} onClick={() => checkLevel(i + 1, "learn")}>
+              {e.level}. Palabras
             </button>
           ))}
         </article>
@@ -72,8 +78,8 @@ const Learn = () => {
         <h2>Lectura:</h2>
         <article>
           {levels.map((e, i) => (
-            <button key={e._id} onClick={() => checkLevel(i + 1, 'learn')}>
-              {e.level}. Palabras
+            <button key={e._id} onClick={() => checkLevel(i + 1, "read")}>
+              {e.level}. Alfabeto
             </button>
           ))}
         </article>

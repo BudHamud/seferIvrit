@@ -25,7 +25,7 @@ const Header = () => {
         </ul>
         <ul className="user">
           <li className="unread">
-            <Link to={'/chat'}><img src="/chat.svg" /></Link>
+            <Link to={'/chat'}><img src="/chat.svg" alt="chat" /></Link>
             <div />
           </li>
           <AuthModal />
