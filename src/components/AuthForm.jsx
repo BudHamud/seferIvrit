@@ -38,7 +38,7 @@ const AuthForm = ({
         setError(error);
       } else {
         updateUser(data.user);
-        navigate("/exercises");
+        navigate("/unit");
       }
     } catch (error) {
       console.log('Frontend Error:', error);
