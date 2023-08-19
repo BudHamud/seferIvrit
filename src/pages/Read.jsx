@@ -279,5 +279,4 @@ const Read = () => {
     </ReadStyled>
   );
 };
-
 export default Read;

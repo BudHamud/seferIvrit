@@ -59,9 +59,7 @@ const Learn = () => {
       </main>
     );
   }
-
   
-
   return (
     <UnitStyle>
       <h1>Unidad {user.progress.unit}</h1>
