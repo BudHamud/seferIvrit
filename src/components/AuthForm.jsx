@@ -37,6 +37,7 @@ const AuthForm = ({
       if (error) {
         setError(error);
       } else {
+        // Si no hay error mandar al usuario a '/unit'
         updateUser(data.user);
         navigate("/unit");
       }
