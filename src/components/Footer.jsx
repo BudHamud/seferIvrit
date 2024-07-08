@@ -26,7 +26,7 @@ const Footer = () => {
   return (
     <FooterContainer>
       <p>
-        © 2023 Beit Sefer | Desarrollado por{" "}
+        © 2024 Beit Sefer | Desarrollado por{" "}
         <a href="https://www.linkedin.com/in/adrielcamacho/">
           Adriel Camacho
         </a>

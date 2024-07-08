@@ -1,6 +1,5 @@
-import { useState } from "react";
-import { useParams } from 'react-router-dom'
 import styled from "styled-components";
+import Table from "../components/Table";
 
 const WordStyled = styled.main`
   h3 {
@@ -43,162 +42,61 @@ const WordStyled = styled.main`
 `;
 
 const Words = () => {
-  const [word, setWord] = useState("");
 
-  const alefbeth = [
-    {
-      word: "א",
-      name: "Alef",
-      info: "Alef es la primer letra del abecedario hebreo y su sonido puede ser cualquier vocal o un silencio.",
-      example: ['אוכל (Ojel) - Comer', 'En esta caso la Alef es muda porque el que produce el sonido de la O es la letra Vav (ו)']
-    },
-    {
-      word: "ב",
-      name: "Bet",
-      info: "Bet es la segunda letra del abecedario hebreo y su sonido es 'b'.",
-      example: ['בית (Beit) - Casa', 'En esta palabra, la letra Bet tiene un sonido claro de "b".']
-    },
-    {
-      word: "ג",
-      name: "Gimel",
-      info: "Gimel es la tercera letra del abecedario hebreo y su sonido es 'g'.",
-      example: ['גן (Gan) - Jardín', 'En este caso, la letra Gimel se pronuncia como "g".']
-    },
-    {
-      word: "ד",
-      name: "Dalet",
-      info: "Dalet es la cuarta letra del abecedario hebreo y su sonido es 'd'.",
-      example: ['דלת (Delet) - Puerta', 'La letra Dalet se pronuncia como "d" en esta palabra.']
-    },
-    {
-      word: "ה",
-      name: "He",
-      info: "He es la quinta letra del abecedario hebreo y su sonido es 'h'.",
-      example: ['הים (Hayam) - Mar', 'En esta palabra, la letra He tiene un sonido suave de "h".']
-    },
-    {
-      word: "ו",
-      name: "Vav",
-      info: "Vav es la sexta letra del abecedario hebreo y su sonido es 'v' u 'o' u 'u'.",
-      example: ['ויניגרט (Vinegret) - Aderezo', 'En esta palabra, la letra Vav puede sonar como "v", "o" u "u" dependiendo del dialecto.']
-    },
-    {
-      word: "ז",
-      name: "Zain",
-      info: "Zain es la séptima letra del abecedario hebreo y su sonido es 'z'.",
-      example: ['זהב (Zahav) - Oro', 'En esta palabra, la letra Zain se pronuncia como "z".']
-    },
-    {
-      word: "ח",
-      name: "Jet",
-      info: "Jet es la octava letra del abecedario hebreo y su sonido es una 'j' gutural.",
-      example: ['חלום (Jalom) - Sueño', 'La letra Jet se pronuncia de manera gutural, como una "j" francesa.']
-    },
-    {
-      word: "ט",
-      name: "Tet",
-      info: "Tet es la novena letra del abecedario hebreo y su sonido es similar a una 't' suave.",
-      example: ['טעם (Ta\'am) - Sabor', 'La letra Tet tiene un sonido suave similar a una "t".']
-    },
-    {
-      word: "י",
-      name: "Yod",
-      info: "Yod es la décima letra del abecedario hebreo y su sonido es una 'y' consonántica o puede ser una vocal.",
-      example: ['יד (Yad) - Mano', 'La letra Yod puede sonar como "y" o funcionar como vocal en algunas palabras.']
-    },
-    {
-      word: "כ",
-      name: "Kaf",
-      info: "Kaf es la undécima letra del abecedario hebreo y su sonido es 'k'.",
-      example: ['כלב (Kelev) - Perro', 'La letra Kaf tiene un sonido claro de "k" en esta palabra.']
-    },
-    {
-      word: "ל",
-      name: "Lamed",
-      info: "Lamed es la duodécima letra del abecedario hebreo y su sonido es 'l'.",
-      example: ['לימון (Limon) - Limón', 'La letra Lamed se pronuncia como "l" en esta palabra.']
-    },
-    {
-      word: "מ",
-      name: "Mem",
-      info: "Mem es la decimotercera letra del abecedario hebreo y su sonido es 'm'.",
-      example: ['מים (Mayim) - Agua', 'En esta palabra, la letra Mem se pronuncia como "m".']
-    },
-    {
-      word: "נ",
-      name: "Nun",
-      info: "Nun es la decimocuarta letra del abecedario hebreo y su sonido es 'n'.",
-      example: ['נחש (Najash) - Serpiente', 'La letra Nun se pronuncia como "n" en esta palabra.']
-    },
-    {
-      word: "ס",
-      name: "Samej",
-      info: "Samej es la decimoquinta letra del abecedario hebreo y su sonido es 's'.",
-      example: ['סוף (Sof) - Final', 'En esta palabra, la letra Samej tiene un sonido claro de "s".']
-    },
-    {
-      word: "ע",
-      name: "Ain",
-      info: "Ain es la decimosexta letra del abecedario hebreo y su sonido es una vocal gutural.",
-      example: ['עין (Ayin) - Ojo', 'La letra Ain tiene un sonido gutural similar a una vocal.']
-    },
-    {
-      word: "פ",
-      name: "Pe",
-      info: "Pe es la decimoséptima letra del abecedario hebreo y su sonido es 'p'.",
-      example: ['פרח (Perach) - Flor', 'En esta palabra, la letra Pe tiene un sonido claro de "p".']
-    },
-    {
-      word: "צ",
-      name: "Tsadi",
-      info: "Tsadi es la decimoctava letra del abecedario hebreo y su sonido es 'ts'.",
-      example: ['צמח (Tzemach) - Planta', 'La letra Tsadi se pronuncia como "ts" en esta palabra.']
-    },
-    {
-      word: "ק",
-      name: "Kof",
-      info: "Kof es la decimonovena letra del abecedario hebreo y su sonido es 'k'.",
-      example: ['קרח (Karach) - Hielo', 'En esta palabra, la letra Kof tiene un sonido claro de "k".']
-    },
-    {
-      word: "ר",
-      name: "Resh",
-      info: "Resh es la vigésima letra del abecedario hebreo y su sonido es una 'r' gutural.",
-      example: ['ראש (Rosh) - Cabeza', 'La letra Resh se pronuncia de manera gutural, similar a una "r" francesa.']
-    },
-    {
-      word: "ש",
-      name: "Shin",
-      info: "Shin es la vigésimo primera letra del abecedario hebreo y su sonido es 'sh'.",
-      example: ['שמש (Shemesh) - Sol', 'En esta palabra, la letra Shin se pronuncia como "sh".']
-    },
-    {
-      word: "ת",
-      name: "Tav",
-      info: "Tav es la vigésimo segunda y última letra del abecedario hebreo y su sonido es 't'.",
-      example: ['תורה (Torah) - Torá', 'La letra Tav tiene un sonido claro de "t" en esta palabra.']
-    },
-];
-
-  const { lesson } = useParams()
-
+  const verbs = [
+    { verb: 'גר', group: 'פעל', infinitive: "לגור", present: ['גר', 'גרה', 'גרים','גרות'], meaning: 'vivir' },
+    { verb: 'בא', group: 'פעל', infinitive: "לבוא", present: ['בא', 'באה', 'באים','באות'], meaning: 'ir' },
+    { verb: 'רץ', group: 'פעל', infinitive: "לרוץ", present: ['רץ', 'רצה', 'רצים','רצות'], meaning: 'correr' },
+    { verb: 'שר', group: 'פעל', infinitive: "לשאר", present: ['שר', 'שרה', 'שרים','שרות'], meaning: 'cantar' },
+    { verb: 'שם', group: 'פעל', infinitive: "לשאם", present: ['שם', 'שמה', 'שמים','שמות'], meaning: 'poner' },
+    { verb: 'הולך', group: 'פעל', infinitive: "ללכת", present: ['הולך', 'הולכת', 'הולכים','הןלכות'], meaning: 'caminar' },
+    { verb: 'כותב', group: 'פעל', infinitive: "לכתוב", present: ['כותב', 'כותבת', 'כותבים','כותבות'], meaning: 'escribir' },
+    { verb: 'לומד', group: 'פעל', infinitive: "ללמוד", present: ['לומד', 'לומדת', 'לומדים','לומדות'], meaning: 'estudiar' },
+    { verb: 'עובד', group: 'פעל', infinitive: "לעבוד", present: ['עובד', 'עובדת', 'עובדים','עובדות'], meaning: 'trabajar' },
+    { verb: 'אומר', group: 'פעל', infinitive: "לומר", present: ['אומר', 'אומרת', 'אומרים','אומרות'], meaning: 'decir' },
+    { verb: 'אוכל', group: 'פעל', infinitive: "לאכול", present: ['אוכל', 'אוכלת', 'אוכלים','אוכלות'], meaning: 'comer/comida' },
+    { verb: 'קורא', group: 'פעל', infinitive: "לקרוא", present: ['קורא', 'קוראת', 'קוראים','קוראות'], meaning: 'leer' },
+    { verb: 'אוהב', group: 'פעל', infinitive: "לאהוב", present: ['אוהב', 'אוהבת', 'אוהבים','אוהבות'], meaning: 'amar/querer' },
+    { verb: 'שומע', group: 'פעל', infinitive: "לשמוע", present: ['שומע', 'שומעת', 'שומעים','שומעות'], meaning: 'oir/escuchar' },
+    { verb: 'יודע', group: 'פעל', infinitive: "לעדת", present: ['יודע', 'יודעת', 'יודעים','יודעות'], meaning: 'saber' },
+    { verb: 'רוצה', group: 'פעל', infinitive: "לרצות", present: ['רוצה', 'רוצה', 'ירוצים', 'רוצות'], meaning: 'querer' },
+    { verb: 'שותה', group: 'פעל', infinitive: "לשתות", present: ['שותה', 'שותה', 'שותים', 'שותות'], meaning: 'tomar' },
+    { verb: 'קונה', group: 'פעל', infinitive: "לקנות", present: ['קונה', 'קונה', 'קונים', 'קונות'], meaning: 'comprar' },
+    { verb: 'רואה', group: 'פעל', infinitive: "לראות", present: ['רואה', 'רואה', 'רואים', 'רואות'], meaning: 'mirar' },
+    { verb: 'בונה', group: 'פעל', infinitive: "לבנות", present: ['בונה', 'בונה','בונים', 'בונות'], meaning: 'construir' },
+    { verb: 'עושה', group: 'פעל', infinitive: "לעשות", present: ['עושה', 'עושה', 'עושים', 'עושות'], meaning: 'hacer' },
+    { verb: 'עולה', group: 'פעל', infinitive: "לעלות", present: ['עולה', 'עולה', 'עולים', 'עולום'], meaning: 'subir' },
+    { verb: 'עונה', group: 'פעל', infinitive: "לענות", present: ['עונה', 'עונה', 'עונים', 'עונות'], meaning: 'responder' },
+    { verb: 'שואל', group: 'פעל', infinitive: "לשאול", present: ['שואל', 'שואלת', 'שואלים', 'שואלות'], meaning: 'preguntar' },
+    { verb: 'יושב', group: 'פעל', infinitive: "לשבת", present: ['יושב', 'יושבת', 'יושבים', 'יושבות'], meaning: 'sentarse' },
+    { verb: 'מדבר', group: 'פיעל', infinitive: "לדבר", present: ['מדבר', 'מדברת', 'מדברים', 'מדברות'], meaning: 'hablar' },
+    { verb: 'מטייל', group: 'פיעל', infinitive: "לטייל", present: ['מטייל', 'מטיילת', 'מטיילים', 'מטיילות'], meaning: 'pasear' },
+    { verb: 'מחפש', group: 'פיעל', infinitive: "לחפש", present: ['מחפש', 'מחפשת', 'מחפשים', 'מחפשות'], meaning: 'buscar' },
+    { verb: 'מקבל', group: 'פיעל', infinitive: "לקבל", present: ['מקבל', 'מקבלת', 'מקבלים', 'מקבלות'], meaning: 'recibir' },
+    { verb: 'משלם', group: 'פיעל', infinitive: "לשלם", present: ['משלם', 'משלת', 'משלמים', 'משלמות'], meaning: 'pagar' },
+    { verb: 'מספר', group: 'פיעל', infinitive: "לספר", present: ['מספר', 'מספרת', 'מספרים', 'מספרות'], meaning: 'relatar' },
+    { verb: 'מקבר', group: 'פיעל', infinitive: "לקבר", present: ['מקבר', 'מקברת', 'מקברים', 'מקברות'], meaning: 'visitar' },
+    { verb: 'מקבש', group: 'פיעל', infinitive: "לבקש", present: ['מקבש', 'מקבשת', 'מקבשים', 'מקבשות'], meaning: 'pedir' },
+    { verb: 'מקבש', group: 'פיעל', infinitive: "לבקש", present: ['מקבש', 'מקבשת', 'מקבשים', 'מקבשות'], meaning: 'pedir' },
+    { verb: 'מזמין', group: 'הפעיל', infinitive: "להזמין", present: ['מזמין', 'מזמינה', 'מזמינים', 'מזמינות'], meaning: 'invitar/pedir' },
+    { verb: 'מרגיש', group: 'הפעיל', infinitive: "להרגיש", present: ['מרגיש', 'מרגישה', 'מרגישים', 'מרגישות'], meaning: 'sentir' },
+    { verb: 'מתחיל', group: 'הפעיל', infinitive: "להתחיל", present: ['מתחיל', 'מתחילה', 'מתחילים', 'מתחילות'], meaning: 'comenzar' },
+    { verb: 'ממשיך', group: 'הפעיל', infinitive: "להמשיך", present: ['ממשיך', 'ממשיכה', 'ממשיכים', 'ממשיכות'], meaning: 'continuar' },
+    { verb: 'מפסיק', group: 'הפעיל', infinitive: "להפסיק", present: ['מפסיק', 'מפסיקה', 'מפסיקים', 'מפסיקות'], meaning: 'interrumpir' },
+    { verb: 'מסביר', group: 'הפעיל', infinitive: "להסביר", present: ['מסביר', 'מסבירה', 'מסבירים', 'מסבירות'], meaning: 'explicar' },
+    { verb: 'מצליח', group: 'הפעיל', infinitive: "להצליח", present: ['מצליח', 'מצליחה', 'מצליחים', 'מצליחות'], meaning: 'lograr' },
+    { verb: 'מחליט', group: 'הפעיל', infinitive: "להחליט", present: ['מחליט', 'מחליטה', 'מחליטים', 'מחליטות'], meaning: 'decidir' },
+    { verb: 'מכיר', group: 'הפעיל', infinitive: "להכיר", present: ['מכיר', 'מכירה', 'מכירים', 'מכירות'], meaning: 'conocer' },
+    { verb: 'מגיע', group: 'הפעיל', infinitive: "להגיע", present: ['מגיע', 'מגיעה', 'מגיעים', 'מגיעות'], meaning: 'llegar' },
+    { verb: 'מבין', group: 'הפעיל', infinitive: "להבין", present: ['מבין', 'מבינה', 'מבינים', 'מבינות'], meaning: 'entender' },
+    { verb: 'מכין', group: 'הפעיל', infinitive: "להכין", present: ['מכין', 'מכינה', 'מכינים', 'מכינות'], meaning: 'preparar' },
+    { verb: 'מודיע', group: 'הפעיל', infinitive: "להודיע", present: ['מודיע', 'מודיעה', 'מודיעים', 'מודיעות'], meaning: 'avisar/anunciar' },
+    { verb: 'מוציא', group: 'הפעיל', infinitive: "להוציא", present: ['מוציא', 'מוציאה', 'מוציאים', 'מוציאות'], meaning: 'sacar/extraer' },
+  ];
 
   return (
     <WordStyled>
-      <h3>Clase { lesson }</h3>
-      <div className="info">
-      <h3>{word === '' ? '' : word.word}</h3>
-      <p>{word === '' ? '' : word.info}</p>
-      <p>{word === '' ? '' : word.example[0]}</p>
-      <p>{word === '' ? '' : word.example[1]}</p>
-      </div>
-      <div className="alefbeth">
-        {alefbeth.map((elem, i) => (
-          <p onClick={() => setWord(elem)} key={i}>
-            {elem.word} {elem.name}
-          </p>
-        ))}
-      </div>
+      <Table data={ verbs } />
     </WordStyled>
   );
 };

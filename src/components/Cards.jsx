@@ -30,15 +30,28 @@ const CardHomeStyle = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    a {
-      color: #FFF;
+    div {
+      width: 100px;
       padding: 5px 15px;
-      border: solid 2px #FFF;
+      border: solid 2px #fff;
       border-radius: 5px;
-      transition: ease-in-out .2s;
-      &:hover {
-        background-color: #FFF;
+      transition: ease-in-out 0.2s;
+      a {
+        color: #fff;
+      }
+      &:hover a {
         color: #000;
+      }
+      &:hover {
+        background-color: #fff;
+      }
+    }
+  }
+  @media (width < 480px) {
+    width: 95%;
+    .info {
+      div {
+        margin-top: 10px;
       }
     }
   }

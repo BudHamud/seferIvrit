@@ -6,6 +6,7 @@ import Footer from './components/Footer';
 import Learn from './pages/Learn';
 import Community from './pages/Community';
 import Read from './pages/Read';
+import Words from './pages/Words';
 
 function App() {
   return (
@@ -14,9 +15,10 @@ function App() {
     <Routes>
     <Route path='/' element={ <Home /> } />
     <Route path='/unit' element={ <Unit /> } />
-    <Route path='/read/:lesson' element={ <Read /> } />
-    <Route path='/learn/:lesson' element={ <Learn /> } />
+    <Route path='/read' element={ <Read /> } />
+    <Route path='/learn' element={ <Learn /> } />
     <Route path='/chat' element={ <Community /> } />
+    <Route path='/words' element={ <Words /> } />
     </Routes>
     <Footer />
     </BrowserRouter>

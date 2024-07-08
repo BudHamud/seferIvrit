@@ -69,6 +69,26 @@ const HomeStyle = styled.main`
       gap: 10px;
     }
   }
+  @media (width < 990px) {
+    section:nth-child(1) {
+      text-align: center;
+      width: 70%;
+      margin-bottom: 50px;
+      img {
+        display: none;
+      }
+    }
+  }
+  @media (width < 480px) {
+    section:nth-child(1) {
+      width: 90%;
+    }
+    section:nth-child(2) {
+      img {
+        width: 50px;
+      }
+    }
+  }
 `;
 
 export const OldStyles = styled.main`

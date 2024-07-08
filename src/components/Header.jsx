@@ -12,7 +12,7 @@ const Header = () => {
   return (
     <HeaderStyled isNavOpen={isNavOpen}>
       <Link to={'/'} className="logo">
-        <img src="./logo.svg" alt="Logo" />
+        <img src="/logo.svg" alt="Logo" />
         Beit Sefer
       </Link>
       <nav>
@@ -31,7 +31,7 @@ const Header = () => {
           <AuthModal />
         </ul>
       </nav>
-      <img className="book" src="./book.svg" onClick={handleNavToggle} />
+      <img className="book" src="/book.svg" onClick={handleNavToggle} />
     </HeaderStyled>
   );
 };

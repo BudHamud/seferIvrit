@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
-import Loading from "../components/Loading";
-import GetUnit from "../hooks/GetUnit";
+// import Loading from "../components/Loading";
+// import GetUnit from "../hooks/GetUnit";
 import Answers from "../components/Answers";
 import styled from "styled-components";
 import Results from "../components/Results";
@@ -10,7 +10,10 @@ import userAPI from "../api/userAPI";
 
 const Learn = () => {
   const { user, updateUser } = useContext(AuthContext);
-  const [loading, unit] = GetUnit();
+  // const [loading, unit] = GetUnit();
+
+  const unit = JSON.parse(localStorage.getItem("lesson"));
+
   const [actual, setActual] = useState(0);
   const [totalXP, setXP] = useState(0);
   const [resultArr, setResult] = useState([]);
@@ -19,19 +22,22 @@ const Learn = () => {
     if (isCorrect) {
       setXP((prevXP) => prevXP + 5);
     }
-  
-    if (actual === unit.exercises.length - 1) {
+
+    if (actual === unit.content.length - 1) {
       const updateData = {
         xp: isCorrect ? totalXP + 5 : totalXP,
         unit: unit.unit,
         level: unit.level,
         id: user._id,
       };
-  
+
       userAPI.updateStats(updateData);
-      updateUser({ ...user, xp: isCorrect ? user.xp + totalXP + 5 : user.xp + totalXP });
+      updateUser({
+        ...user,
+        xp: isCorrect ? user.xp + totalXP + 5 : user.xp + totalXP,
+      });
     }
-  
+
     let arr = resultArr;
     arr.push(isCorrect);
     setActual(actual + 1);
@@ -40,29 +46,25 @@ const Learn = () => {
 
   return (
     <LearnStyle>
-      {loading ? (
-        <Loading />
-      ) : (
-        <section>
-          <Link to={"/unit"}>Volver</Link>
-          <div className="progressBar" style={{ width: `${actual * 25}%` }} />
-          {actual === unit.exercises.length ? (
-            <div className="result">
-              <p>Tu resultado:</p>
-              <Results results={resultArr} />
-              <p>Ganaste {totalXP} puntos de XP</p>
-            </div>
-          ) : (
-            <React.Fragment>
-              <p>{unit.exercises[actual].question}</p>
-              <Answers
-                ansArr={unit.exercises[actual].answers}
-                myFunc={nextQuestion}
-              />
-            </React.Fragment>
-          )}
-        </section>
-      )}
+      <section>
+        <Link to={"/unit"}>Volver</Link>
+        <div className="progressBar" style={{ width: `${actual * 25}%` }} />
+        {actual === unit.content.length ? (
+          <div className="result">
+            <p>Tu resultado:</p>
+            <Results results={resultArr} />
+            <p>Ganaste {totalXP} puntos de XP</p>
+          </div>
+        ) : (
+          <React.Fragment>
+            <p>{unit.content[actual].question}</p>
+            <Answers
+              ansArr={unit.content[actual].answers}
+              myFunc={nextQuestion}
+            />
+          </React.Fragment>
+        )}
+      </section>
     </LearnStyle>
   );
 };

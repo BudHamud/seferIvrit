@@ -21,9 +21,11 @@ const Learn = () => {
     setIsModalOpen(false);
   };
 
-  const checkLevel = (num, to) => {
+  const checkLevel = (num, to, data) => {
+    localStorage.setItem('lesson', JSON.stringify(data))
+
     if (user.progress.level >= num) {
-      navigate(`/${to}/${num}`);
+      navigate(`/${to}`);
     } else {
       openModal();
       setMsg("Todavía no tienes acceso a este contenido.");
@@ -66,9 +68,9 @@ const Learn = () => {
       <section>
         <h2>Ejercicios:</h2>
         <article>
-          {levels.map((e, i) => (
-            <button key={e._id} onClick={() => checkLevel(i + 1, "learn")}>
-              {e.level}. Palabras
+          {levels.filter(e => e.type === 'quiz').sort((a, b) => a.level - b.level).map((e, i) => (
+            <button key={e._id} onClick={() => checkLevel(i + 1, "learn", e)}>
+              {e.level}. {e.title}
             </button>
           ))}
         </article>
@@ -77,9 +79,9 @@ const Learn = () => {
       <section>
         <h2>Lectura:</h2>
         <article>
-          {levels.map((e, i) => (
-            <button key={e._id} onClick={() => checkLevel(i + 1, "read")}>
-              {e.level}. Alfabeto
+          {levels.filter(e => e.type !== 'quiz').sort((a, b) => a.level - b.level).map((e, i) => (
+            <button key={e._id} onClick={() => checkLevel(i + 1, "read", e)}>
+              {e.level}. {e.title}
             </button>
           ))}
         </article>
