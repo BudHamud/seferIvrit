@@ -18,6 +18,11 @@ const Header = () => {
       <nav>
         <ul className="common">
           <li>
+            <Link to="/words">
+              <img src="/dictionary.svg" alt="words" />
+            </Link>
+          </li>
+          <li>
             <Link to="/unit">
               <img src="/learn.svg" alt="learn" />
             </Link>
@@ -45,9 +50,6 @@ const HeaderStyled = styled.header`
   justify-content: space-around;
   nav {
     display: flex;
-    ul:nth-child(1) {
-      gap: 15px;
-    }
     ul {
       display: flex;
       align-items: center;
@@ -156,7 +158,7 @@ const HeaderStyled = styled.header`
       flex-direction: column-reverse;
       animation: flip 0.25s;
       ul {
-        flex-direction: column;
+        flex-direction: column-reverse;
       }
       ${(props) =>
         props.isNavOpen &&
